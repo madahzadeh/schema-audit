@@ -1,0 +1,17 @@
+{
+  "name": "schema-audit",
+  "version": "1.0.0",
+  "description": "Zero-dependency CLI that crawls a site and validates its JSON-LD structured data (schema.org) for the most common rich-result types.",
+  "type": "module",
+  "bin": { "schema-audit": "./schema-audit.mjs" },
+  "main": "./schema-audit.mjs",
+  "scripts": {
+    "test": "node --test",
+    "demo": "node schema-audit.mjs --demo"
+  },
+  "engines": { "node": ">=20" },
+  "keywords": ["seo", "schema-org", "json-ld", "structured-data", "rich-results", "cli", "audit", "technical-seo"],
+  "author": "Reza Madahzadeh (https://github.com/madahzadeh)",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/madahzadeh/schema-audit.git" }
+}
