@@ -1,0 +1,42 @@
+name: Publish to npm
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Run tests
+        run: node --test
+
+      - name: Prepare package manifest
+        env:
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          cat > /tmp/patch.cjs <<'EOF'
+          const fs = require("fs");
+          const repo = process.env.REPO;
+          const p = JSON.parse(fs.readFileSync("package.json", "utf8"));
+          p.files = ["*.mjs", "action.yml", "README.md", "LICENSE"];
+          p.homepage = "https://github.com/madahzadeh/" + repo + "#readme";
+          p.bugs = { url: "https://github.com/madahzadeh/" + repo + "/issues" };
+          p.bin[p.name] = p.bin[Object.keys(p.bin)[0]];
+          fs.writeFileSync("package.json", JSON.stringify(p, null, 2) + "\n");
+          console.log("publishing " + p.name + "@" + p.version);
+          EOF
+          node /tmp/patch.cjs
+
+      - name: Publish
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
