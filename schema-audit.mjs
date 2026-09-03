@@ -8,10 +8,11 @@
  */
 
 import { createServer } from "node:http";
-import { readFileSync } from "node:fs";
+import { readFileSync, realpathSync } from "node:fs";
 import process from "node:process";
+import { pathToFileURL } from "node:url";
 
-export const VERSION = "1.0.0";
+export const VERSION = "1.0.1";
 
 /* ------------------------------------------------------------------ */
 /* Helpers                                                             */
@@ -590,5 +591,5 @@ async function main() {
   process.exit(failing > 0 ? 1 : 0);
 }
 
-const isDirectRun = process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href;
+const isDirectRun = !!process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href;
 if (isDirectRun) main();
