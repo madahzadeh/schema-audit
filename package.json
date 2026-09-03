@@ -1,6 +1,6 @@
 {
   "name": "schema-audit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Zero-dependency CLI that crawls a site and validates its JSON-LD structured data (schema.org) for the most common rich-result types.",
   "type": "module",
   "bin": { "schema-audit": "./schema-audit.mjs" },
