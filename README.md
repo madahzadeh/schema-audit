@@ -1,6 +1,7 @@
 # schema-audit
 
 [![CI](https://github.com/madahzadeh/schema-audit/actions/workflows/ci.yml/badge.svg)](https://github.com/madahzadeh/schema-audit/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/schema-audit)](https://www.npmjs.com/package/schema-audit)
 [![Node.js 20+](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Zero dependencies](https://img.shields.io/badge/dependencies-0-lightgrey)](package.json)
@@ -11,17 +12,26 @@ Zero-dependency CLI that crawls your site and validates its **JSON-LD structured
 
 ## Quick start
 
-Node.js 20+ is the only requirement — no `npm install` needed.
+No install, no clone — just Node.js 20+:
+
+```bash
+npx schema-audit https://example.com/                          # crawl and audit
+npx schema-audit --sitemap https://example.com/sitemap.xml     # audit from a sitemap
+```
+
+Prefer a global install? `npm i -g schema-audit`, then run `schema-audit <url>`.
+
+<details>
+<summary>Run from source instead</summary>
 
 ```bash
 git clone https://github.com/madahzadeh/schema-audit.git
 cd schema-audit
-
-node schema-audit.mjs https://example.com/          # crawl and audit
-node schema-audit.mjs --sitemap https://example.com/sitemap.xml
-npm run demo                                        # offline demo with seeded issues
-npm test                                            # deterministic test suite
+node schema-audit.mjs https://example.com/
+npm run demo   # offline demo with seeded issues
+npm test       # deterministic test suite
 ```
+</details>
 
 ## What it checks
 
