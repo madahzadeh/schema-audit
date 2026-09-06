@@ -36,38 +36,47 @@ npm test       # deterministic test suite
 <details>
 <summary>Example output</summary>
 
+`npx --yes schema-audit https://developer.mozilla.org --max-pages 15 --no-color`
+
 ```
 schema-audit v1.0.1
 
-S101 missing-recommended (15)
-  • https://armeniadriving.com/en/
-    Organization "iEquity AI LLC" is missing recommended property "logo"
-    fix: recommended for richer Organization results
-  • https://armeniadriving.com/en/topics/
-    Organization "iEquity AI LLC" is missing recommended property "logo"
-    fix: recommended for richer Organization results
-  • https://armeniadriving.com/en/tickets/
-    Organization "iEquity AI LLC" is missing recommended property "logo"
-    fix: recommended for richer Organization results
+S103 no-structured-data (15)
+  • https://developer.mozilla.org/en-US/
+    no JSON-LD structured data found on this page
+    fix: add a <script type="application/ld+json"> block describing the page
+  • https://developer.mozilla.org/en-US/docs/Web/HTML
+    no JSON-LD structured data found on this page
+    fix: add a <script type="application/ld+json"> block describing the page
+  • https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements
+    no JSON-LD structured data found on this page
+    fix: add a <script type="application/ld+json"> block describing the page
+  • https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes
+    no JSON-LD structured data found on this page
+    fix: add a <script type="application/ld+json"> block describing the page
+  • https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes
+    no JSON-LD structured data found on this page
+    fix: add a <script type="application/ld+json"> block describing the page
+  • https://developer.mozilla.org/en-US/docs/Web/HTML/Reference
+    no JSON-LD structured data found on this page
+    fix: add a <script type="application/ld+json"> block describing the page
+  • https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Responsive_images
+    no JSON-LD structured data found on this page
+    fix: add a <script type="application/ld+json"> block describing the page
 …
-S102 duplicate-entity (209)
-  • https://armeniadriving.com/en/topics/road-signs/
-    duplicate entity ListItem "This road sign:" appears more than once on this page
-    fix: keep a single canonical entity per page
-  • https://armeniadriving.com/en/topics/road-signs/
-    duplicate entity ListItem "What sign requires you to give way to vehicles traveling on an intersecting road?" appears more than once on this page
-    fix: keep a single canonical entity per page
-  • https://armeniadriving.com/en/topics/road-signs/
-    duplicate entity ListItem "This road sign indicates:" appears more than once on this page
-    fix: keep a single canonical entity per page
-  • https://armeniadriving.com/en/topics/road-signs/
-    duplicate entity ListItem "What sign requires you to give way to vehicles traveling on an intersecting road?" appears more than once on this page
-    fix: keep a single canonical entity per page
-…
+  • https://developer.mozilla.org/en-US/docs/Web/XML
+    no JSON-LD structured data found on this page
+    fix: add a <script type="application/ld+json"> block describing the page
+  • https://developer.mozilla.org/en-US/docs/Web/CSS
+    no JSON-LD structured data found on this page
+    fix: add a <script type="application/ld+json"> block describing the page
+  • https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties
+    no JSON-LD structured data found on this page
+    fix: add a <script type="application/ld+json"> block describing the page
 
 Summary
-  pages scanned: 15   pages with JSON-LD: 15   entities: 1041
-  errors: 0   warnings: 224
+  pages scanned: 15   pages with JSON-LD: 0   entities: 0
+  errors: 0   warnings: 15
 ```
 
 </details>
