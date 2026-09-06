@@ -12,7 +12,7 @@ import { readFileSync, realpathSync } from "node:fs";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
 
-export const VERSION = "1.0.1";
+export const VERSION = "1.0.3";
 
 /* ------------------------------------------------------------------ */
 /* Helpers                                                             */
