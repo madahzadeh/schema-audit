@@ -1,0 +1,61 @@
+name: "schema-audit"
+description: "Crawl a site and validate its JSON-LD structured data (schema.org) for the most common rich-result types."
+author: "Reza Madahzadeh"
+
+branding:
+  icon: "check-circle"
+  color: "blue"
+
+inputs:
+  url:
+    description: "URL to start crawling from. Ignored when 'sitemap' is set."
+    required: false
+  sitemap:
+    description: "Sitemap URL to audit instead of crawling."
+    required: false
+  max-pages:
+    description: "Maximum number of pages to crawl."
+    required: false
+    default: "200"
+  concurrency:
+    description: "Number of parallel requests."
+    required: false
+    default: "5"
+  fail-on:
+    description: "Fail the job at this level or above: error, warning, none."
+    required: false
+    default: "error"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Run schema-audit"
+      shell: bash
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+        INPUT_URL: ${{ inputs.url }}
+        INPUT_SITEMAP: ${{ inputs.sitemap }}
+        INPUT_MAX_PAGES: ${{ inputs.max-pages }}
+        INPUT_CONCURRENCY: ${{ inputs.concurrency }}
+        INPUT_FAIL_ON: ${{ inputs.fail-on }}
+      run: |
+        set -euo pipefail
+
+        if [ -n "$INPUT_SITEMAP" ]; then
+          node "$ACTION_PATH/schema-audit.mjs" \
+            --sitemap "$INPUT_SITEMAP" \
+            --max-pages "$INPUT_MAX_PAGES" \
+            --concurrency "$INPUT_CONCURRENCY" \
+            --fail-on "$INPUT_FAIL_ON" \
+            --no-color
+        elif [ -n "$INPUT_URL" ]; then
+          node "$ACTION_PATH/schema-audit.mjs" \
+            "$INPUT_URL" \
+            --max-pages "$INPUT_MAX_PAGES" \
+            --concurrency "$INPUT_CONCURRENCY" \
+            --fail-on "$INPUT_FAIL_ON" \
+            --no-color
+        else
+          echo "::error::schema-audit: provide either the 'url' or the 'sitemap' input."
+          exit 2
+        fi

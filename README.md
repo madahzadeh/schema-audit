@@ -68,22 +68,10 @@ Exit codes: `0` clean · `1` findings at/above `--fail-on` · `2` usage/runtime 
 ## CI example
 
 ```yaml
-name: structured-data
-on:
-  schedule:
-    - cron: "0 6 * * 1"
-  workflow_dispatch:
-
-jobs:
-  audit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: |
-          curl -sL https://raw.githubusercontent.com/madahzadeh/schema-audit/main/schema-audit.mjs -o schema-audit.mjs
-          node schema-audit.mjs https://example.com/ --max-pages 300 --no-color
+- uses: madahzadeh/schema-audit@main
+  with:
+    url: https://example.com
+    fail-on: error
 ```
 
 ## Limitations
