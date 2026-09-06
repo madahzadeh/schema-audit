@@ -146,3 +146,58 @@ test("crawl audit of the fixture site produces expected findings per page", asyn
     server.close();
   }
 });
+
+test("CLI footer uses stderr for success and failure, stays plain, and is absent in JSON and usage output", async () => {
+  const { createServer } = await import("node:http");
+  const { spawn } = await import("node:child_process");
+  const { fileURLToPath } = await import("node:url");
+  const { VERSION } = await import("../schema-audit.mjs");
+  const entry = fileURLToPath(new URL("../schema-audit.mjs", import.meta.url));
+  const good = "<script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"name\":\"Example\",\"url\":\"https://example.com/\"}</script>";
+  const bad = "<script type=\"application/ld+json\">{broken}</script>";
+  const server = createServer((req, res) => {
+    res.writeHead(req.url === "/missing" ? 404 : 200, { "content-type": "text/html; charset=utf-8" });
+    res.end(req.url === "/good" ? good : bad);
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const env = { ...process.env, FORCE_COLOR: "1" };
+  delete env.NO_COLOR;
+  const run = (args) => new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, [entry, ...args], {
+      env,
+    });
+    let stdout = "", stderr = "";
+    child.stdout.setEncoding("utf8").on("data", (chunk) => { stdout += chunk; });
+    child.stderr.setEncoding("utf8").on("data", (chunk) => { stderr += chunk; });
+    child.on("error", reject);
+    child.on("close", (code) => resolve({ code, stdout, stderr }));
+  });
+  const footer = `────────────────────────────────────────────────\nschema-audit v${VERSION} · github.com/madahzadeh\n`;
+  const argsFor = (path) => [`${base}/${path}`, "--max-pages", "1"];
+  try {
+    for (const [path, expectedCode] of [["good", 0], ["bad", 1]]) {
+      for (const flags of [[], ["--no-color"], ["--fail-on", "none"]]) {
+        const result = await run([...argsFor(path), ...flags]);
+        assert.equal(result.code, flags.includes("none") ? 0 : expectedCode);
+        assert.equal(result.stderr, footer);
+        assert.ok(!result.stdout.includes(footer));
+        assert.ok(!result.stderr.includes("\u001b"));
+      }
+      const json = await run([...argsFor(path), "--json"]);
+      assert.equal(json.code, expectedCode);
+      assert.equal(json.stderr, "");
+      assert.ok(!json.stdout.includes("· github.com/madahzadeh"));
+      assert.ok(JSON.parse(json.stdout).summary);
+    }
+    for (const args of [[], ["--unknown"], ["--fail-on", "invalid"]]) {
+      const usage = await run(args);
+      assert.equal(usage.code, 2);
+      assert.ok(!(usage.stdout + usage.stderr).includes("· github.com/madahzadeh"));
+    }
+
+  } finally {
+    server.closeAllConnections();
+    await new Promise((resolve) => server.close(resolve));
+  }
+});

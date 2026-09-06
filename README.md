@@ -33,6 +33,45 @@ npm test       # deterministic test suite
 ```
 </details>
 
+<details>
+<summary>Example output</summary>
+
+```
+schema-audit v1.0.1
+
+S101 missing-recommended (15)
+  • https://armeniadriving.com/en/
+    Organization "iEquity AI LLC" is missing recommended property "logo"
+    fix: recommended for richer Organization results
+  • https://armeniadriving.com/en/topics/
+    Organization "iEquity AI LLC" is missing recommended property "logo"
+    fix: recommended for richer Organization results
+  • https://armeniadriving.com/en/tickets/
+    Organization "iEquity AI LLC" is missing recommended property "logo"
+    fix: recommended for richer Organization results
+…
+S102 duplicate-entity (209)
+  • https://armeniadriving.com/en/topics/road-signs/
+    duplicate entity ListItem "This road sign:" appears more than once on this page
+    fix: keep a single canonical entity per page
+  • https://armeniadriving.com/en/topics/road-signs/
+    duplicate entity ListItem "What sign requires you to give way to vehicles traveling on an intersecting road?" appears more than once on this page
+    fix: keep a single canonical entity per page
+  • https://armeniadriving.com/en/topics/road-signs/
+    duplicate entity ListItem "This road sign indicates:" appears more than once on this page
+    fix: keep a single canonical entity per page
+  • https://armeniadriving.com/en/topics/road-signs/
+    duplicate entity ListItem "What sign requires you to give way to vehicles traveling on an intersecting road?" appears more than once on this page
+    fix: keep a single canonical entity per page
+…
+
+Summary
+  pages scanned: 15   pages with JSON-LD: 15   entities: 1041
+  errors: 0   warnings: 224
+```
+
+</details>
+
 ## What it checks
 
 | Code | Check | Meaning |
@@ -68,15 +107,28 @@ Exit codes: `0` clean · `1` findings at/above `--fail-on` · `2` usage/runtime 
 ## CI example
 
 ```yaml
-- uses: madahzadeh/schema-audit@main
-  with:
-    url: https://example.com
-    fail-on: error
+name: SEO checks
+on: [push]
+
+jobs:
+  schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: madahzadeh/schema-audit@v1
+        with:
+          url: https://example.com
+          max-pages: '300'
+          fail-on: error
 ```
 
 ## Limitations
 
 Honest scope: only JSON-LD is audited — Microdata and RDFa are not parsed. HTML is read as served (no JavaScript rendering). Required/recommended property sets are an opinionated distillation of schema.org and Google's guidance, not a certification; Google's own Rich Results Test remains the final word for eligibility.
+
+## Related tools
+
+- [hreflang-audit](https://github.com/madahzadeh/hreflang-audit) — international SEO: hreflang return links, invalid locale codes, canonical conflicts
+- [llms-txt-audit](https://github.com/madahzadeh/llms-txt-audit) — generates and validates `llms.txt` so AI answer engines can read and cite your site
 
 ## Hire me
 
